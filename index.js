@@ -128,6 +128,11 @@ const typeDefs = `
       author: String!
       genres: [String!]!
     ): Book
+
+    editAuthor(
+      name: String!
+      setBornTo: Int
+    ): Author
   }
 `;
 
@@ -137,9 +142,12 @@ const resolvers = {
       if (args.author) {
         return books.filter((book) => book.author === args.author).length;
       }
+
       return books.length;
     },
+
     authorCount: () => authors.length,
+
     allBooks: (root, args) => {
       let filteredBooks = books;
       if (args.author) {
@@ -147,29 +155,48 @@ const resolvers = {
           (book) => book.author === args.author
         );
       }
+
       if (args.genre) {
         filteredBooks = filteredBooks.filter((book) =>
           book.genres.includes(args.genre)
         );
       }
+
       return filteredBooks;
     },
     allAuthors: () => authors,
   },
+
   Author: {
     bookCount: (root) => {
       return books.filter((book) => book.author === root.name).length;
     },
   },
+
   Mutation: {
     addBook: (root, args) => {
       if (!authors.find((author) => author.name === args.author)) {
         const author = { name: args.author, id: uuid() };
         authors = authors.concat(author);
       }
+
       const book = { ...args, id: uuid() };
       books.push(book);
       return book;
+    },
+
+    editAuthor: (root, args) => {
+      const author = authors.find((author) => author.name === args.name);
+      if (!author) {
+        return null;
+      }
+
+      const updatedAuthor = { ...author, born: args.setBornTo };
+      authors = authors.map((author) =>
+        author.name === args.name ? updatedAuthor : author
+      );
+
+      return updatedAuthor;
     },
   },
 };
@@ -178,7 +205,6 @@ const server = new ApolloServer({
   typeDefs,
   resolvers,
 });
-
 startStandaloneServer(server, {
   listen: { port: 4000 },
 }).then(({ url }) => {
