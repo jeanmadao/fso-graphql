@@ -19,6 +19,7 @@
   "homepage": "https://github.com/jeanmadao/fso-graphql#readme",
   "dependencies": {
     "@apollo/server": "^4.9.3",
-    "graphql": "^16.8.0"
+    "graphql": "^16.8.0",
+    "uuid": "^9.0.0"
   }
 }
