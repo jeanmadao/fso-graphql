@@ -1,0 +1,25 @@
+{
+  "name": "fso-graphql",
+  "version": "0.0.1",
+  "description": "graphql exercises",
+  "main": "index.js",
+  "scripts": {
+    "start": "NODE_ENV=production node index.js",
+    "dev": "NODE_ENV=development nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/jeanmadao/fso-graphql.git"
+  },
+  "author": "jeanmadao",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jeanmadao/fso-graphql/issues"
+  },
+  "homepage": "https://github.com/jeanmadao/fso-graphql#readme",
+  "dependencies": {
+    "@apollo/server": "^4.9.3",
+    "graphql": "^16.8.0",
+    "uuid": "^9.0.0"
+  }
+}
