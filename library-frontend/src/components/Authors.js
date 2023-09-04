@@ -7,7 +7,7 @@ const Authors = () => {
   const [name, setName] = useState(null);
   const [setBornTo, setSetBornTo] = useState("");
   const result = useQuery(ALL_AUTHORS);
-  const [editAuthor, editAuthorResult] = useMutation(EDIT_AUTHOR, {
+  const [editAuthor] = useMutation(EDIT_AUTHOR, {
     refetchQueries: [{ query: ALL_BOOKS }, { query: ALL_AUTHORS }],
   });
 
