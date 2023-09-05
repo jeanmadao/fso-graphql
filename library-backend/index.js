@@ -62,21 +62,20 @@ const typeDefs = `
 
 const resolvers = {
   Query: {
-    bookCount: async (root, args) =>
-      args.author
-        ? Book.countDocuments({ author: args.author })
-        : Book.countDocuments(),
+    bookCount: async () => Book.countDocuments(),
 
     authorCount: () => Author.countDocuments(),
 
     allBooks: async (root, args) => {
-      let books = await Book.find().populate("author");
+      const filter = {};
       if (args.author) {
-        books = books.filter((book) => book.author === args.author);
+        const author = await Author.findOne({ name: args.author });
+        filter.author = author ? author.id : null;
       }
       if (args.genre) {
-        books = books.filter((book) => book.genres.includes(args.genre));
+        filter.genres = args.genre;
       }
+      const books = await Book.find(filter).populate("author");
       return books;
     },
     allAuthors: async () => await Author.find(),
