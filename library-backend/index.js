@@ -94,7 +94,7 @@ const resolvers = {
       if (args.author.length < 4) {
         throw new GraphQLError("Name must be at least 4 characters long", {
           extensions: {
-            code: "BAD_USER_INPUT",
+            code: "GRAPHQL_VALIDATION_FAILED",
             invalidArgs: args.author,
           },
         });
@@ -102,7 +102,7 @@ const resolvers = {
       if (args.title.length < 5) {
         throw new GraphQLError("Title must be at least 5 characters long", {
           extensions: {
-            code: "BAD_USER_INPUT",
+            code: "GRAPHQL_VALIDATION_FAILED",
             invalidArgs: args.title,
           },
         });
@@ -111,7 +111,7 @@ const resolvers = {
       if (bookCheck) {
         throw new GraphQLError("Title must be unique", {
           extensions: {
-            code: "BAD_USER_INPUT",
+            code: "GRAPHQL_VALIDATION_FAILED",
             invalidArgs: args.title,
           },
         });
@@ -130,6 +130,13 @@ const resolvers = {
         { name: args.name },
         { born: args.setBornTo }
       );
+      if (!updatedAuthor)
+        throw new GraphQLError("Author not found", {
+          extensions: {
+            code: "BAD_USER_INPUT",
+            invalidArgs: args.title,
+          },
+        });
 
       return updatedAuthor;
     },
