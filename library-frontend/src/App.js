@@ -24,8 +24,12 @@ const App = () => {
       <Menu logout={logout} token={token} />
       <Routes>
         <Route path="/" element={<Authors token={token} />} />
-        <Route path="/books" element={<Books />} />
-        <Route path="/books/add" element={<NewBook token={token} />} />
+        <Route path="/books" element={<Books recommended={false} />} />
+        <Route path="/books/add" element={<NewBook />} />
+        <Route
+          path="/books/recommended"
+          element={<Books recommended={true} />}
+        />
         <Route path="/login" element={<Login setToken={setToken} />} />
       </Routes>
     </div>

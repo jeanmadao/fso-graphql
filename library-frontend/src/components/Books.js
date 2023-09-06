@@ -1,33 +1,44 @@
 import { useQuery } from "@apollo/client";
-import { useState } from "react";
-import { ALL_BOOKS } from "../queries";
+import { useEffect, useState } from "react";
+import { ALL_BOOKS, ME } from "../queries";
 
-const Books = () => {
+const Books = ({ recommended }) => {
+  const resultAllBooks = useQuery(ALL_BOOKS);
+  const resultMe = useQuery(ME);
   const [filter, setFilter] = useState(null);
-  const result = useQuery(ALL_BOOKS);
-  if (result.loading) {
+  useEffect(() => {
+    if (recommended) {
+      if (resultMe.data) {
+        setFilter(resultMe.data.me.favoriteGenre);
+      }
+    } else {
+      setFilter(null);
+    }
+  }, [resultMe.data, recommended]);
+  if (resultAllBooks.loading || resultMe.loading) {
     return <div>loading...</div>;
   }
 
   const books = filter
-    ? result.data.allBooks.filter((book) => book.genres.includes(filter))
-    : result.data.allBooks;
+    ? resultAllBooks.data.allBooks.filter((book) =>
+        book.genres.includes(filter)
+      )
+    : resultAllBooks.data.allBooks;
   const genres = [
-    ...new Set(result.data.allBooks.map((book) => book.genres).flat()),
+    ...new Set(resultAllBooks.data.allBooks.map((book) => book.genres).flat()),
   ];
 
   return (
     <div>
-      <h2>books</h2>
-
+      <h2>{recommended ? "recommended" : "books"}</h2>
       <p>
-        in genre <b>{filter ? filter : "all"}</b>
+        {recommended ? "books in your favorite" : "in"} genre{" "}
+        <b>{filter ? filter : "all"}</b>
       </p>
-
       <table>
         <tbody>
           <tr>
-            <th></th>
+            <th>title</th>
             <th>author</th>
             <th>published</th>
           </tr>
@@ -40,12 +51,15 @@ const Books = () => {
           ))}
         </tbody>
       </table>
-      {genres.map((genre) => (
-        <button key={genre} onClick={() => setFilter(genre)}>
-          {genre}
-        </button>
-      ))}
-      <button onClick={() => setFilter("")}>all genres</button>
+      {!recommended &&
+        genres.map((genre) => (
+          <button key={genre} onClick={() => setFilter(genre)}>
+            {genre}
+          </button>
+        ))}
+      {!recommended && (
+        <button onClick={() => setFilter("")}>all genres</button>
+      )}
     </div>
   );
 };

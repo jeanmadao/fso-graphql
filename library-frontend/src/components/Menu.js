@@ -17,6 +17,9 @@ const Menu = ({ logout, token }) => {
           <Link style={linkStyle} to="/books/add">
             add book
           </Link>
+          <Link style={linkStyle} to="/books/recommended">
+            recommended
+          </Link>
           <button onClick={logout}>logout</button>
         </>
       )}
