@@ -17,8 +17,8 @@ export const ALL_BOOKS = gql`
       author {
         name
       }
-      published
       genres
+      published
     }
   }
 `;
