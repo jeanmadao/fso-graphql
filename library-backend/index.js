@@ -174,13 +174,14 @@ const resolvers = {
         { born: args.setBornTo },
         { new: true }
       );
-      if (!updatedAuthor)
+      if (!updatedAuthor) {
         throw new GraphQLError("Author not found", {
           extensions: {
             code: "BAD_USER_INPUT",
             invalidArgs: args.title,
           },
         });
+      }
 
       return updatedAuthor;
     },
