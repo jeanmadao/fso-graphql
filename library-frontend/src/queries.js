@@ -23,6 +23,14 @@ export const ALL_BOOKS = gql`
   }
 `;
 
+export const ALL_GENRES = gql`
+  query allGenres {
+    allBooks {
+      genres
+    }
+  }
+`;
+
 export const ME = gql`
   query me {
     me {

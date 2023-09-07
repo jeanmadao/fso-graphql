@@ -1,11 +1,11 @@
 import { useQuery } from "@apollo/client";
 import { useEffect, useState } from "react";
-import { ALL_BOOKS, ME } from "../queries";
+import { ALL_BOOKS, ALL_GENRES, ME } from "../queries";
 
 const Books = ({ recommended }) => {
-  const resultAllBooks = useQuery(ALL_BOOKS);
   const resultMe = useQuery(ME);
   const [filter, setFilter] = useState(null);
+
   useEffect(() => {
     if (recommended) {
       if (resultMe.data) {
@@ -15,17 +15,19 @@ const Books = ({ recommended }) => {
       setFilter(null);
     }
   }, [resultMe.data, recommended]);
-  if (resultAllBooks.loading || resultMe.loading) {
+
+  const resultBooks = useQuery(ALL_BOOKS, {
+    variables: { genre: filter },
+  });
+
+  const resultGenres = useQuery(ALL_GENRES);
+
+  if (resultBooks.loading || resultMe.loading || resultGenres.loading) {
     return <div>loading...</div>;
   }
 
-  const books = filter
-    ? resultAllBooks.data.allBooks.filter((book) =>
-        book.genres.includes(filter)
-      )
-    : resultAllBooks.data.allBooks;
   const genres = [
-    ...new Set(resultAllBooks.data.allBooks.map((book) => book.genres).flat()),
+    ...new Set(resultGenres.data.allBooks.map((book) => book.genres).flat()),
   ];
 
   return (
@@ -42,7 +44,7 @@ const Books = ({ recommended }) => {
             <th>author</th>
             <th>published</th>
           </tr>
-          {books.map((book) => (
+          {resultBooks.data.allBooks.map((book) => (
             <tr key={book.title}>
               <td>{book.title}</td>
               <td>{book.author.name}</td>
