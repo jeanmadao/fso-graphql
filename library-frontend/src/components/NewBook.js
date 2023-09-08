@@ -9,29 +9,7 @@ const NewBook = () => {
   const [genre, setGenre] = useState("");
   const [genres, setGenres] = useState([]);
 
-  const [addBook] = useMutation(ADD_BOOK, {
-    update: (cache, response) => {
-      const genres = response.data.addBook.genres;
-      genres.forEach((genre) => {
-        cache.updateQuery(
-          { query: ALL_BOOKS, variables: { genre } },
-          ({ allBooks }) => {
-            return {
-              allBooks: allBooks.concat(response.data.addBook),
-            };
-          }
-        );
-      });
-      cache.updateQuery(
-        { query: ALL_BOOKS, variables: { genre: null } },
-        ({ allBooks }) => {
-          return {
-            allBooks: allBooks.concat(response.data.addBook),
-          };
-        }
-      );
-    },
-  });
+  const [addBook] = useMutation(ADD_BOOK);
 
   const submit = async (event) => {
     event.preventDefault();
