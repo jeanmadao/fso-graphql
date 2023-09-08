@@ -60,7 +60,7 @@ const Books = ({ recommended }) => {
           </button>
         ))}
       {!recommended && (
-        <button onClick={() => setFilter("")}>all genres</button>
+        <button onClick={() => setFilter(null)}>all genres</button>
       )}
     </div>
   );
