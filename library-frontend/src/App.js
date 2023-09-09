@@ -17,7 +17,6 @@ const App = () => {
     onData: ({ data }) => {
       const addedBook = data.data.bookAdded;
       window.alert(`${addedBook.title} has been added`);
-
       const genres = addedBook.genres;
       genres.forEach((genre) => {
         client.cache.updateQuery(

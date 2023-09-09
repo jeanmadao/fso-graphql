@@ -50,7 +50,6 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: splitLink,
 });
-console.log("root");
 ReactDOM.createRoot(document.getElementById("root")).render(
   <Router>
     <ApolloProvider client={client}>

@@ -32,12 +32,14 @@ const resolvers = {
       return context.currentUser;
     },
   },
-  Author: {
-    bookCount: async (root) => Book.countDocuments({ author: root.id }),
-  },
   Book: {
     author: ({ author }) => {
-      return { id: author.id, name: author.name, born: author.born };
+      return {
+        id: author.id,
+        name: author.name,
+        born: author.born,
+        bookCount: author.bookCount,
+      };
     },
   },
   Mutation: {
@@ -77,8 +79,11 @@ const resolvers = {
       }
       let author = await Author.findOne({ name: args.author });
       if (!author) {
-        author = await new Author({ name: args.author }).save();
+        author = await new Author({ name: args.author, bookCount: 0 }).save();
       }
+
+      author.bookCount = author.bookCount + 1;
+      author.save();
 
       const book = await new Book({ ...args, author: author.id }).save();
 
